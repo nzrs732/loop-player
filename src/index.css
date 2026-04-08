@@ -21,6 +21,15 @@
 /* Input placeholder */
 #url-input::placeholder { color: rgba(255,255,255,.3); }
 
+/* Homepage background slow zoom (Ken Burns) */
+@keyframes slow-zoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.12); }
+}
+.bg-slow-zoom {
+  animation: slow-zoom 35s ease-in forwards;
+}
+
 @media (max-width: 600px) {
   #time-display { display: none; }
 }
