@@ -33,3 +33,7 @@
 @media (max-width: 600px) {
   #time-display { display: none; }
 }
+
+/* Hide scrollbar while keeping scroll functional */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

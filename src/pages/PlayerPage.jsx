@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { formatTime } from '../utils/youtube.js'
 
-export default function PlayerPage({ videoId, onBack }) {
+export default function PlayerPage({ videoId, onBack, onOpenLibrary, libraryOpen }) {
   const shellRef      = useRef(null)
   const playerRef     = useRef(null)
   const intervalRef   = useRef(null)
@@ -252,7 +252,7 @@ export default function PlayerPage({ videoId, onBack }) {
 
   // ── Render ────────────────────────────────────────────────────
   return (
-    <div className="h-screen overflow-hidden flex items-center justify-center p-3 sm:p-5">
+    <div className="flex-1 h-full overflow-hidden flex items-center justify-center">
 
         {/* Player shell */}
         <div
@@ -269,16 +269,29 @@ export default function PlayerPage({ videoId, onBack }) {
           {/* YouTube iframe */}
           <div id="yt-player" className="absolute inset-0 w-full h-full" />
 
-          {/* Back button — overlaid top-left inside the player */}
-          <button
-            onClick={onBack}
-            className="absolute top-4 left-4 z-[4] flex items-center gap-1 bg-black/40 hover:bg-black/60 backdrop-blur-sm transition-colors text-white text-sm cursor-pointer rounded-full px-3 py-2 whitespace-nowrap"
-          >
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-              <path d="M12.5 4L7 10l5.5 6" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Back
-          </button>
+          {/* Top-left controls — Back + Library toggle */}
+          <div className="absolute top-4 left-4 z-[4] flex items-center gap-2">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-1 bg-black/40 hover:bg-black/60 backdrop-blur-sm transition-colors text-white text-sm cursor-pointer rounded-full px-3 py-2 whitespace-nowrap"
+            >
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <path d="M12.5 4L7 10l5.5 6" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Back
+            </button>
+            {!libraryOpen && (
+              <button
+                onClick={onOpenLibrary}
+                className="flex items-center gap-1.5 bg-black/40 hover:bg-black/60 backdrop-blur-sm transition-colors text-white text-sm cursor-pointer rounded-full px-3 py-2 whitespace-nowrap"
+              >
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                  <path d="M7.5 4L13 10l-5.5 6" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Your Library
+              </button>
+            )}
+          </div>
 
           {/* Gradient scrim */}
           <div className="scrim absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300" />
@@ -349,6 +362,10 @@ export default function PlayerPage({ videoId, onBack }) {
               {/* Right: utilities */}
               <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
                 <span id="time-display" className="text-[11px] sm:text-xs text-white/60 whitespace-nowrap mr-1 hidden sm:inline">{timeStr}</span>
+
+                <CtrlBtn onClick={onOpenLibrary} title="Your Library">
+                  <LibraryIcon />
+                </CtrlBtn>
 
                 <CtrlBtn onClick={toggleLoop} title={isLoop ? 'Loop on' : 'Loop off'}>
                   <LoopIcon active={isLoop} />
@@ -575,6 +592,15 @@ function ExternalIcon() {
       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/>
       <polyline points="15,3 21,3 21,9" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
       <line x1="10" y1="14" x2="21" y2="3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function LibraryIcon() {
+  return (
+    <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none">
+      <path d="M3 6h18M3 10h12M3 14h9" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/>
+      <polygon points="17,12 23,16 17,20" fill="#fff" opacity=".8"/>
     </svg>
   )
 }
